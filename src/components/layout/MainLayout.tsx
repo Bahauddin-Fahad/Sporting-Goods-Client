@@ -1,7 +1,9 @@
+import { Outlet } from "react-router-dom";
+
 const MainLayout = () => {
   return (
-    <div>
-      <h1>Main Layout</h1>
+    <div className="App min-h-screen mx-auto space-y-10 bg-primary">
+      <Outlet />
     </div>
   );
 };
