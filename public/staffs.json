@@ -1,0 +1,32 @@
+[
+  {
+    "name": "Karim Uddin",
+    "image": "./staffs.png",
+    "profession": "Store Manager",
+    "details": "Karim has over 10 years of experience managing sports equipment stores. He ensures smooth operations and excellent customer service at Los Blancos."
+  },
+  {
+    "name": "Sajid Rahman",
+    "image": "./staffs.png",
+    "profession": "Sales Associate",
+    "details": "Sajid is passionate about sports and has extensive knowledge of various sports equipment. He helps customers find the perfect gear to meet their needs."
+  },
+  {
+    "name": "Rafiq Hossain",
+    "image": "./staffs.png",
+    "profession": "Product Specialist",
+    "details": "Rafiq specializes in football and cricket equipment. His expertise ensures that Los Blancos offers the best products available on the market."
+  },
+  {
+    "name": "Naimur Islam",
+    "image": "./staffs.png",
+    "profession": "Marketing Coordinator",
+    "details": "Naimur handles all marketing activities, including promotions and advertising campaigns, to increase brand awareness and drive sales at Los Blancos."
+  },
+  {
+    "name": "Arif Ahmed",
+    "image": "./staffs.png",
+    "profession": "Customer Service Representative",
+    "details": "Arif provides exceptional customer support, assisting with inquiries, returns, and ensuring customer satisfaction with their purchases."
+  }
+]

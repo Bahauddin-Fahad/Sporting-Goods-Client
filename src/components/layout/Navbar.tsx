@@ -1,8 +1,19 @@
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+type TButtonName =
+  | "all-products"
+  | "manage-products"
+  | "cart"
+  | "about"
+  | string;
 
 const Navbar = () => {
+  const params = useLocation().pathname;
+
+  const [buttonName, setButtonName] = useState<TButtonName>(params.slice(1));
+
   return (
-    <div className="navbar bg-secondary text-white font-semibold h-24 shadow-lg shadow-black sticky top-0 z-20">
+    <div className="navbar bg-secondary  font-semibold h-24 shadow-lg shadow-black sticky top-0 z-20">
       <div className="navbar-start">
         {/* <div className="dropdown">
           <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
@@ -36,30 +47,65 @@ const Navbar = () => {
             </li>
           </ul>
         </div> */}
-        <Link to={"/"} className="btn btn-ghost text-xl">
-          Real Sports
+        <Link
+          to={"/"}
+          className="btn btn-ghost text-2xl text-white"
+          onClick={() => setButtonName("")}
+        >
+          <span>Los Blancos</span>
+          <span className="text-accent">Sports</span>
         </Link>
       </div>
       <div className="navbar-center hidden lg:flex">
-        <ul className="flex gap-5 text-xl">
-          <li>
-            <Link to={"/all-products"} className="hover:text-red-500">
+        <ul className="flex gap-5 text-lg text-white">
+          <li
+            className={`pb-2 ${
+              buttonName === "all-products"
+                ? "border-b-2 border-b-accent"
+                : "hover:scale-110 duration-300"
+            }`}
+          >
+            <Link
+              to={"/all-products"}
+              onClick={() => setButtonName("all-products")}
+            >
               All Products
             </Link>
           </li>
-          <li>
-            <Link to={"/manage-products"} className="hover:text-red-500">
+          <li
+            className={`pb-2 ${
+              buttonName === "manage-products"
+                ? "border-b-2 border-b-accent"
+                : "hover:scale-110 duration-300"
+            }`}
+          >
+            <Link
+              to={"/manage-products"}
+              onClick={() => setButtonName("manage-products")}
+            >
               Manage Products
             </Link>
           </li>
-          <li>
-            <Link to={"/cart"} className="hover:text-red-500">
+          <li
+            className={`pb-2 ${
+              buttonName === "cart"
+                ? "border-b-2 border-b-accent"
+                : "hover:scale-110 duration-300"
+            }`}
+          >
+            <Link to={"/cart"} onClick={() => setButtonName("cart")}>
               Cart
             </Link>
           </li>
-          <li>
-            <Link to={"/about-us"} className="hover:text-red-500">
-              About us
+          <li
+            className={`pb-2 ${
+              buttonName === "about"
+                ? "border-b-2 border-b-accent"
+                : "hover:scale-110 duration-300"
+            }`}
+          >
+            <Link to={"/about"} onClick={() => setButtonName("about")}>
+              About Us
             </Link>
           </li>
         </ul>

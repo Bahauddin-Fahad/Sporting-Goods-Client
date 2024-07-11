@@ -1,0 +1,78 @@
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
+
+.bg {
+  background-image: url("../../../staff_bg_image/staffs_bg_1.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+}
+
+.bgLayer {
+  background-image: radial-gradient(
+    rgba(255, 255, 255, 0.302),
+    rgba(255, 255, 255, 0.805),
+    rgb(255, 255, 255)
+  );
+  /* background-image: linear-gradient(transparent,transparent); */
+}
+
+.slide {
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.leaflet-container {
+  width: 100%;
+  height: 700px;
+}
+
+.myclass {
+  background-image: url("https://jthemes.net/themes/html/harmony-event/assets/images/1.testimonial-bg.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  /* filter: contrast(0.8); */
+}
+
+.noSkew {
+  opacity: 0;
+  animation: stopSkew 0.7s steps(100) forwards;
+}
+.skew {
+  animation: opacity 0.2s steps(100) forwards;
+}
+
+@keyframes stopSkew {
+  0% {
+    transform: translateX(100%) skewX(15deg);
+    opacity: 0;
+  }
+
+  85% {
+    transform: translateX(0%) skewX(15deg);
+    opacity: 1;
+  }
+
+  95% {
+    transform: translateX(0%) skewX(-2deg);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateX(0%) skewX(0deg);
+    opacity: 1;
+  }
+}
+
+@keyframes opacity {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}

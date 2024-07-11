@@ -1,7 +1,15 @@
+import { useEffect } from "react";
 import MainLayout from "./components/layout/MainLayout";
 import Navbar from "./components/layout/Navbar";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 function App() {
+  useEffect(() => {
+    AOS.init({
+      duration: 1200, // Animation duration
+    });
+  }, []);
   return (
     <>
       <Navbar />

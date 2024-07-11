@@ -8,6 +8,7 @@ export type TBanner = {
 };
 
 export type TProduct = {
+  _id: string;
   name: string;
   description: string;
   price: number;

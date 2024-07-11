@@ -29,7 +29,7 @@ const Banner = () => {
         <Slider {...settings}>
           {banners &&
             banners?.map((banner: TBanner, index: number) => (
-              <div key={index} className="">
+              <div key={index}>
                 <img
                   src={banner?.bannerImage}
                   alt="Banner"
