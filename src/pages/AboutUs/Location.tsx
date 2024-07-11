@@ -2,11 +2,8 @@ import { AiTwotoneStar } from "react-icons/ai";
 import { FaStarHalfAlt } from "react-icons/fa";
 import { GiDirectionSign } from "react-icons/gi";
 import { MdCellWifi } from "react-icons/md";
-import { useNavigate } from "react-router-dom";
 
-function Address() {
-  const navigate = useNavigate();
-
+function Location() {
   return (
     <div className="space-y-5">
       <h4 className="text-4xl font-bold text-center">Our Shop Location</h4>
@@ -83,10 +80,7 @@ function Address() {
               </div>
 
               <div>
-                <button
-                  onClick={() => navigate("/map")}
-                  className="bg-white px-5 py-3 rounded-full text-black tracking-wide font-semibold"
-                >
+                <button className="bg-white px-5 py-3 rounded-full text-black tracking-wide font-semibold">
                   View Larger Map
                 </button>
               </div>
@@ -99,4 +93,4 @@ function Address() {
   );
 }
 
-export default Address;
+export default Location;

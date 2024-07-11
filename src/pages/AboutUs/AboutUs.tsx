@@ -1,9 +1,9 @@
-import Address from "./Address";
+import Location from "./Location";
 import Staffs from "./Staffs";
 import "./aboutUs.css";
 import Contact from "./Contact";
 import Header from "./Header";
-import Qualities from "./Qualities";
+import Missions from "./Missions";
 import { useEffect } from "react";
 
 const AboutUs = () => {
@@ -13,10 +13,10 @@ const AboutUs = () => {
   return (
     <div className="max-w-6xl mx-auto text-white space-y-20">
       <Header />
-      <Qualities />
+      <Missions />
       <Contact />
       <Staffs />
-      <Address />
+      <Location />
     </div>
   );
 };

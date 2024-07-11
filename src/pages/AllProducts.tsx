@@ -2,7 +2,8 @@ import { useEffect } from "react";
 import ProductCard from "../components/product/ProductCard";
 import { useGetProductsQuery } from "../redux/features/product/productApi";
 import { TProduct } from "../types";
-
+// import { RiFilter2Fill } from "react-icons/ri";
+import { BsSortDownAlt, BsSortDown } from "react-icons/bs";
 const AllProducts = () => {
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
@@ -85,26 +86,17 @@ const AllProducts = () => {
         </div>
         <div className="form-control max-w-sm">
           <label className="label">
-            <span className="label-text text-white font-semibold">Search</span>
+            <div className="flex gap-2 justify-center items-center">
+              <BsSortDownAlt className="text-white" />
+              <span className="label-text text-white font-semibold">
+                Sort By Price
+              </span>
+            </div>
           </label>
-          <input
-            type="text"
-            className="input input-bordered bg-[#F6F6F6] border-0 rounded focus:outline-none"
-            placeholder={"Type Here"}
-            // {...register("price", {
-            //   required: {
-            //     value: true,
-            //     message: "Price is required",
-            //   },
-            // })}
-          />
-          {/* <label className="label">
-              {errors.price?.type === "required" && (
-                <span className="label-text-alt text-red-600 text-sm">
-                  {errors.price.message}
-                </span>
-              )}
-            </label> */}
+          <select className="select select-bordered w-full max-w-xs font-semibold">
+            <option>Low to High</option>
+            <option>High to Low</option>
+          </select>
         </div>
       </div>
       <div className="grid grid-cols-3 gap-10">
