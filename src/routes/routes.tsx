@@ -7,6 +7,7 @@ import App from "../App";
 import Home from "../pages/Home/Home";
 import AboutUs from "../pages/AboutUs/AboutUs";
 import ProductDetails from "../pages/Products/ProductDetails";
+import CategoryProducts from "../pages/Products/CategoryProducts";
 
 const router = createBrowserRouter([
   {
@@ -20,6 +21,10 @@ const router = createBrowserRouter([
       {
         path: "all-products",
         element: <AllProducts />,
+      },
+      {
+        path: "products/cat/:categoryId",
+        element: <CategoryProducts />,
       },
       {
         path: "manage-products",

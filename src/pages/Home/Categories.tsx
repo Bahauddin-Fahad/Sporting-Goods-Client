@@ -1,7 +1,9 @@
+import { useNavigate } from "react-router-dom";
 import { useGetCategoriesQuery } from "../../redux/features/category/categoryApi";
 import { TCategory } from "../../types";
 import { BiSolidCategory } from "react-icons/bi";
 const Categories = () => {
+  const navigate = useNavigate();
   const { data } = useGetCategoriesQuery(undefined);
   const categories = data?.data;
 
@@ -15,6 +17,7 @@ const Categories = () => {
         {categories?.map((category: TCategory, index: string) => (
           <div
             key={index}
+            onClick={() => navigate(`/products/cat/${category._id}`)}
             className="h-[200px] w-[250px] mx-auto rounded-3xl flex flex-col items-center gap-3 p-5 border border-black shadow-md shadow-black bg-white cursor-pointer"
           >
             <img

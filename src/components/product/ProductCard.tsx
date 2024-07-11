@@ -1,5 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { TProduct } from "../../types";
+import { PhotoProvider, PhotoView } from "react-photo-view";
+
 type Props = {
   product: TProduct;
 };
@@ -8,11 +10,15 @@ const ProductCard = ({ product }: Props) => {
   return (
     <div className="card bg-secondary shadow-md border border-black shadow-black text-white rounded-2xl h-full">
       <figure className="glass rounded-lg p-5 mb-3 m-7">
-        <img
-          src={product.image}
-          alt=""
-          className="h-[150px] w-full object-contain hover:scale-110 duration-500"
-        />
+        <PhotoProvider>
+          <PhotoView src={product.image}>
+            <img
+              src={product.image}
+              alt="Post"
+              className="h-[150px] w-full object-contain hover:scale-110 duration-500"
+            />
+          </PhotoView>
+        </PhotoProvider>
       </figure>
       <div className="card-body px-5">
         <h2 className="card-title">{product?.name}</h2>
@@ -25,7 +31,7 @@ const ProductCard = ({ product }: Props) => {
         <div className="card-actions justify-end items-end mt-5">
           <button
             onClick={() => navigate(`/product/${product._id}`)}
-            className="btn btn-accent text-primary w-full font-bold hover:scale-110 duration-500"
+            className="btn btn-accent text-primary w-full font-bold hover:scale-105 duration-500"
           >
             View Details
           </button>

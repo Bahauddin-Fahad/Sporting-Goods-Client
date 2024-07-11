@@ -1,22 +1,46 @@
 import { TProduct } from "../../types";
 import { useGetSingleProuctQuery } from "../../redux/features/product/productApi";
 import { useParams } from "react-router-dom";
+import { useEffect } from "react";
+import { PhotoProvider, PhotoView } from "react-photo-view";
+import "react-photo-view/dist/react-photo-view.css";
 
 const ProductDetails = () => {
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+  });
+
   const { id } = useParams();
   const { data } = useGetSingleProuctQuery(id);
   const productDetails: TProduct = data?.data;
 
   return (
     <div className="mx-auto text-white">
+      <div
+        className="h-[200px] flex flex-col justify-center items-center"
+        data-aos="zoom-in"
+      >
+        <p className="text-4xl text-center font-bold my-3 space-x-5 uppercase">
+          <span className="font-normal tracking-wide text-[#bdbdbd9e]">
+            {productDetails?.name.split(" ")[0]}
+          </span>
+          <span className="text-accent">
+            {productDetails?.name.split(" ").slice(1).join(" ")}
+          </span>
+        </p>
+      </div>
       <div className="card shadow-xl mt-6 bg-secondary p-10 space-y-10">
         <div className="relative glass bg-[#272727] p-5">
-          <div className="max-w-xl mx-auto h-[200px] sm:h-[250px] md:h-[365px]">
-            <img
-              src={productDetails?.image}
-              alt="Post"
-              className="h-[200px] sm:h-[250px] md:h-[365px] mx-auto object-contain xs:object-cover"
-            />
+          <div className="max-w-xl mx-auto h-[200px] sm:h-[250px] md:h-[365px] cursor-pointer">
+            <PhotoProvider>
+              <PhotoView src={productDetails?.image}>
+                <img
+                  src={productDetails?.image}
+                  alt="Post"
+                  className="h-[200px] sm:h-[250px] md:h-[365px] mx-auto object-contain xs:object-cover"
+                />
+              </PhotoView>
+            </PhotoProvider>
           </div>
         </div>
         <div className="card-body p-0">
