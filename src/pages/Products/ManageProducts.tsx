@@ -1,7 +1,5 @@
-import React from "react";
-
 const ManageProducts = () => {
-  return <div>Manage</div>;
+  return <div className="text-black"></div>;
 };
 
 export default ManageProducts;

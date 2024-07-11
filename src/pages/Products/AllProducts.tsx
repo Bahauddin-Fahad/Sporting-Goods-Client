@@ -1,9 +1,10 @@
 import { useEffect } from "react";
-import ProductCard from "../components/product/ProductCard";
-import { useGetProductsQuery } from "../redux/features/product/productApi";
-import { TProduct } from "../types";
+import ProductCard from "../../components/product/ProductCard";
+import { useGetProductsQuery } from "../../redux/features/product/productApi";
+import { TProduct } from "../../types";
+import { BsSortDownAlt } from "react-icons/bs";
 // import { RiFilter2Fill } from "react-icons/ri";
-import { BsSortDownAlt, BsSortDown } from "react-icons/bs";
+// import {  BsSortDown } from "react-icons/bs";
 const AllProducts = () => {
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
@@ -36,7 +37,6 @@ const AllProducts = () => {
         </div>
         <div className="flex justify-center items-center gap-x-3 lg:-mt-16 -mt-10 text-white "></div>
       </div>
-
       <div className="flex justify-between">
         <div className="form-control max-w-sm">
           <label className="label">

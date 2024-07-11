@@ -1,11 +1,12 @@
 import { createBrowserRouter } from "react-router-dom";
-import AllProducts from "../pages/AllProducts";
-import ManageProducts from "../pages/ManageProducts";
+import AllProducts from "../pages/Products/AllProducts";
+import ManageProducts from "../pages/Products/ManageProducts";
 import Cart from "../pages/Cart";
 
 import App from "../App";
 import Home from "../pages/Home/Home";
 import AboutUs from "../pages/AboutUs/AboutUs";
+import ProductDetails from "../pages/Products/ProductDetails";
 
 const router = createBrowserRouter([
   {
@@ -23,6 +24,10 @@ const router = createBrowserRouter([
       {
         path: "manage-products",
         element: <ManageProducts />,
+      },
+      {
+        path: "product/:id",
+        element: <ProductDetails />,
       },
       {
         path: "cart",

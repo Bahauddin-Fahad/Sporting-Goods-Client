@@ -1,5 +1,5 @@
 import { RiContactsFill } from "react-icons/ri";
-import ContactForm from "../../components/ContactForm";
+import ContactForm from "../../components/form/ContactForm";
 
 const ContactUs = () => {
   return (
