@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { Control, FieldValues } from "react-hook-form";
+
 export type TCategory = {
   _id: string;
   name: string;
@@ -18,4 +21,18 @@ export type TProduct = {
   brand: string;
   stockQuantity: number;
   rating: number;
+};
+export type RatingProps = {
+  initialRating?: number;
+  onChange?: (rate: number) => void;
+  readonly?: boolean;
+  emptySymbol?: React.ReactNode | string;
+  fullSymbol?: React.ReactNode | string;
+};
+
+export type RatingInputProps = {
+  name: string;
+  control?: Control<FieldValues>;
+  defaultValue?: number;
+  readOnly?: boolean;
 };

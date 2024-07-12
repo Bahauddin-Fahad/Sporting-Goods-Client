@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { TProduct } from "../../types";
 import { PhotoProvider, PhotoView } from "react-photo-view";
+import RatingInput from "./RatingInput";
 
 type Props = {
   product: TProduct;
@@ -27,7 +28,14 @@ const ProductCard = ({ product }: Props) => {
         <p>Category: {product?.category?.name}</p>
         <p>Brand: {product?.brand}</p>
         <p>Stock: {product?.stockQuantity} Pc</p>
-        <p>Rating: {product?.rating} </p>
+        <p>
+          Rating:{" "}
+          <RatingInput
+            name="rating"
+            defaultValue={product?.rating}
+            readOnly={true}
+          />
+        </p>
         <div className="card-actions justify-end items-end mt-5">
           <button
             onClick={() => navigate(`/product/${product._id}`)}

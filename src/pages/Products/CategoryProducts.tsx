@@ -3,18 +3,19 @@ import ProductCard from "../../components/product/ProductCard";
 import { useGetProductsQuery } from "../../redux/features/product/productApi";
 import { TProduct } from "../../types";
 import { useParams } from "react-router-dom";
-// import { RiFilter2Fill } from "react-icons/ri";
-// import {  BsSortDown } from "react-icons/bs";
+import Loading from "../Loading/Loading";
+
 const CategoryProducts = () => {
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
   });
   const { categoryId } = useParams();
 
-  const { data } = useGetProductsQuery(categoryId);
+  const { data, isLoading } = useGetProductsQuery(categoryId);
   const products: TProduct[] = data?.data;
-  console.log(products);
-
+  if (isLoading) {
+    return <Loading />;
+  }
   return (
     <div className="space-y-10">
       <div className="h-[200px] banner-background" data-aos="zoom-in">

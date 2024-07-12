@@ -3,16 +3,19 @@ import ProductCard from "../../components/product/ProductCard";
 import { useGetProductsQuery } from "../../redux/features/product/productApi";
 import { TProduct } from "../../types";
 import { BsSortDownAlt } from "react-icons/bs";
-// import { RiFilter2Fill } from "react-icons/ri";
-// import {  BsSortDown } from "react-icons/bs";
+import Loading from "../Loading/Loading";
+
 const AllProducts = () => {
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
   });
 
-  const { data } = useGetProductsQuery(undefined);
+  const { data, isLoading } = useGetProductsQuery(undefined);
   const products: TProduct[] = data?.data;
 
+  if (isLoading) {
+    return <Loading />;
+  }
   return (
     <div className="space-y-10">
       <div

@@ -10,3 +10,8 @@
 .App {
   padding: 30px 120px 70px 120px;
 }
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}

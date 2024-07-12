@@ -3,17 +3,23 @@ import { useGetProductsQuery } from "../../redux/features/product/productApi";
 import { TProduct } from "../../types";
 import { PhotoProvider, PhotoView } from "react-photo-view";
 import ProductModal from "../../components/product/ProductModal";
+import Loading from "../Loading/Loading";
+import DeleteModal from "../../components/product/DeleteModal";
 
 const ManageProducts = () => {
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
   });
-  const [product, setProduct] = useState({} || null);
-  const [deleteProduct, setDeleteProduct] = useState(null);
 
-  const { data } = useGetProductsQuery(undefined);
+  const [product, setProduct] = useState({} || null);
+  const [deleteProduct, setDeleteProduct] = useState({} || null);
+
+  const { data, isLoading } = useGetProductsQuery(undefined);
   const products: TProduct[] = data?.data;
 
+  if (isLoading) {
+    return <Loading />;
+  }
   return (
     <div className="text-black">
       <div
@@ -34,7 +40,7 @@ const ManageProducts = () => {
           onClick={() => {
             setProduct({});
           }}
-          className="btn btn-accent cursor-pointer"
+          className="btn btn-accent font-bold"
         >
           Add product
         </label>
@@ -76,7 +82,7 @@ const ManageProducts = () => {
                     <div className="flex gap-2 items-center">
                       <label
                         onClick={() => {
-                          // setproduct(product);
+                          setProduct(product);
                         }}
                         htmlFor="product-modal"
                         className="btn btn-sm btn-success cursor-pointer"
@@ -87,7 +93,7 @@ const ManageProducts = () => {
                       <label
                         htmlFor="delete-modal"
                         onClick={() => {
-                          // setDeleteproduct(product);
+                          setDeleteProduct(product);
                         }}
                         className="btn btn-sm btn-error cursor-pointer"
                       >
@@ -117,15 +123,12 @@ const ManageProducts = () => {
 
       {product && <ProductModal product={product} setProduct={setProduct} />}
 
-      {/* {deleteproduct && (
+      {deleteProduct && (
         <DeleteModal
-          modalValue="product"
-          deleteBaseURL={deleteproductURL}
-          deleteModal={deleteproduct}
-          setDeleteModal={setDeleteproduct}
-          refetch={refetch}
+          deleteProductDetails={deleteProduct}
+          setDeleteProductDetails={setDeleteProduct}
         />
-      )} */}
+      )}
     </div>
   );
 };
