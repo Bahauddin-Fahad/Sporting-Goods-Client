@@ -28,8 +28,8 @@ const ProductCard = ({ product }: Props) => {
         <p>Category: {product?.category?.name}</p>
         <p>Brand: {product?.brand}</p>
         <p>Stock: {product?.stockQuantity} Pc</p>
-        <p>
-          Rating:{" "}
+        <p className="flex justify-start items-center gap-2">
+          <span>Rating:</span>
           <RatingInput
             name="rating"
             defaultValue={product?.rating}

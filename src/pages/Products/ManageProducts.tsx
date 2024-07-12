@@ -3,23 +3,25 @@ import { useGetProductsQuery } from "../../redux/features/product/productApi";
 import { TProduct } from "../../types";
 import { PhotoProvider, PhotoView } from "react-photo-view";
 import ProductModal from "../../components/product/ProductModal";
-import Loading from "../Loading/Loading";
 import DeleteModal from "../../components/product/DeleteModal";
+import RatingInput from "../../components/product/RatingInput";
+import Loading from "../Loading/Loading";
 
 const ManageProducts = () => {
-  useEffect(() => {
-    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
-  });
-
   const [product, setProduct] = useState({} || null);
   const [deleteProduct, setDeleteProduct] = useState({} || null);
 
   const { data, isLoading } = useGetProductsQuery(undefined);
   const products: TProduct[] = data?.data;
 
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+  }, [data]);
+
   if (isLoading) {
     return <Loading />;
   }
+
   return (
     <div className="text-black">
       <div
@@ -56,6 +58,7 @@ const ManageProducts = () => {
               <th>Price</th>
               <th>Category</th>
               <th>Brand</th>
+              <th>Rating</th>
               <th>Action</th>
             </tr>
           </thead>
@@ -78,6 +81,13 @@ const ManageProducts = () => {
                   <td className="font-semibold">{product?.price}</td>
                   <td className="font-semibold">{product?.category?.name}</td>
                   <td className="font-semibold">{product?.brand}</td>
+                  <td className="font-semibold">
+                    <RatingInput
+                      readOnly={true}
+                      name={product.name}
+                      defaultValue={product?.rating}
+                    />
+                  </td>
                   <td>
                     <div className="flex gap-2 items-center">
                       <label

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable react-hooks/rules-of-hooks */
 import React from "react";
 import { useController, Control, FieldValues } from "react-hook-form";
 import Rating from "react-rating";
@@ -15,35 +17,40 @@ const RatingInput: React.FC<RatingInputProps> = ({
   defaultValue = 0,
   readOnly = false,
 }) => {
+  console.log(defaultValue);
+
   const starStyle = {
-    fontSize: "2rem",
+    fontSize: readOnly ? "1.2rem" : "2rem",
     color: "gold",
   };
 
   const emptyStarStyle = {
-    fontSize: "2rem",
+    fontSize: readOnly ? "1.2rem" : "2rem",
     color: "lightgray",
   };
 
-  // Always call the hook
-  const { field, fieldState } = useController({
-    name,
-    control,
-    defaultValue,
-  });
+  const { field, fieldState } = control
+    ? useController({
+        name,
+        control,
+        defaultValue,
+      })
+    : { field: { value: defaultValue }, fieldState: undefined };
 
+  const value = field.value;
   const handleChange = readOnly ? undefined : field.onChange;
 
   return (
     <div>
       <Rating
-        initialRating={control ? field.value : defaultValue}
+        initialRating={value}
         onChange={handleChange}
         readonly={readOnly}
         emptySymbol={<span style={emptyStarStyle}>☆</span>}
         fullSymbol={<span style={starStyle}>★</span>}
       />
-      {control && fieldState.error && <p>{fieldState.error.message}</p>}
+
+      {control && fieldState?.error && <p>{fieldState.error.message}</p>}
     </div>
   );
 };

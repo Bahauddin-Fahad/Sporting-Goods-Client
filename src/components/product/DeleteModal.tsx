@@ -10,7 +10,6 @@ const DeleteModal = ({
   const { _id } = deleteProductDetails;
 
   const [deleteProduct, { data, isLoading }] = useDeleteProductMutation();
-  console.log(data);
 
   if (data?.status === 200) {
     toast.success("Product Deleted Successfully", {

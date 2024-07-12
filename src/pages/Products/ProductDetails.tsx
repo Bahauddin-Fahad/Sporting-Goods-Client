@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import { useEffect } from "react";
 import { PhotoProvider, PhotoView } from "react-photo-view";
 import "react-photo-view/dist/react-photo-view.css";
+import RatingInput from "../../components/product/RatingInput";
 
 const ProductDetails = () => {
   useEffect(() => {
@@ -82,7 +83,13 @@ const ProductDetails = () => {
             <span className="text-[10px] xs:text-xs text-[#8A8A8A]">
               Rating
             </span>
-            <p className="text-xs xs:text-base">{productDetails?.rating}</p>
+            <p className="text-xs xs:text-base">
+              <RatingInput
+                name="rating"
+                defaultValue={productDetails?.rating}
+                readOnly={true}
+              />
+            </p>
           </div>
           <div className="card-actions justify-end items-end">
             <button

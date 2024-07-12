@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { useForm } from "react-hook-form";
+import { Controller, FieldError, useForm } from "react-hook-form";
 import { TCategory, TProduct } from "../../types";
 import { useGetCategoriesQuery } from "../../redux/features/category/categoryApi";
 import {
@@ -8,11 +8,10 @@ import {
   useUpdateProductMutation,
 } from "../../redux/features/product/productApi";
 import RatingInput from "./RatingInput";
-import { FormEvent } from "react";
+
 import { toast } from "react-toastify";
 
 const ProductModal = ({ product, setProduct }: any) => {
-  console.log(product);
   const categoryName = product?.category?.name;
 
   const { data } = useGetCategoriesQuery(undefined);
@@ -49,7 +48,7 @@ const ProductModal = ({ product, setProduct }: any) => {
   if (addedData?.status === 200) {
     toast.success("Product Added Successfully", {
       theme: "colored",
-      toastId: product._id,
+      toastId: "added",
     });
     setProduct(null);
   }
@@ -64,7 +63,7 @@ const ProductModal = ({ product, setProduct }: any) => {
   if (updatedData?.status === 200) {
     toast.success("Product Updated Successfully", {
       theme: "colored",
-      toastId: product._id,
+      toastId: "updated",
     });
     setProduct(null);
   }
@@ -102,7 +101,7 @@ const ProductModal = ({ product, setProduct }: any) => {
               <label className="label">
                 {errors.name?.type === "required" && (
                   <span className="label-text-alt text-red-600 text-sm">
-                    {errors.name.message}
+                    {(errors.name as FieldError).message}
                   </span>
                 )}
               </label>
@@ -129,7 +128,7 @@ const ProductModal = ({ product, setProduct }: any) => {
               <label className="label">
                 {errors.price?.type === "required" && (
                   <span className="label-text-alt text-red-600 text-sm">
-                    {errors.price.message}
+                    {(errors.price as FieldError).message}
                   </span>
                 )}
               </label>
@@ -154,7 +153,7 @@ const ProductModal = ({ product, setProduct }: any) => {
               <label className="label">
                 {errors.description?.type === "required" && (
                   <span className="label-text-alt text-red-600 text-sm">
-                    {errors.description.message}
+                    {(errors.description as FieldError).message}
                   </span>
                 )}
               </label>
@@ -187,7 +186,7 @@ const ProductModal = ({ product, setProduct }: any) => {
               <label className="label">
                 {errors.category?.type === "required" && (
                   <span className="label-text-alt text-red-600 text-sm">
-                    {errors.category.message}
+                    {(errors.category as FieldError).message}
                   </span>
                 )}
               </label>
@@ -213,7 +212,7 @@ const ProductModal = ({ product, setProduct }: any) => {
               <label className="label">
                 {errors.brand?.type === "required" && (
                   <span className="label-text-alt text-red-600 text-sm">
-                    {errors.brand.message}
+                    {(errors.brand as FieldError).message}
                   </span>
                 )}
               </label>
@@ -239,7 +238,7 @@ const ProductModal = ({ product, setProduct }: any) => {
               <label className="label">
                 {errors.stockQuantity?.type === "required" && (
                   <span className="label-text-alt text-red-600 text-sm">
-                    {errors.stockQuantity.message}
+                    {(errors.stockQuantity as FieldError).message}
                   </span>
                 )}
               </label>
@@ -265,7 +264,7 @@ const ProductModal = ({ product, setProduct }: any) => {
               <label className="label">
                 {errors.image?.type === "required" && (
                   <span className="label-text-alt text-red-600 text-sm">
-                    {errors.image.message}
+                    {(errors.image as FieldError).message}
                   </span>
                 )}
               </label>
@@ -276,11 +275,22 @@ const ProductModal = ({ product, setProduct }: any) => {
                   Rating *
                 </span>
               </label>
-              <RatingInput name="rating" control={control} />
+              <Controller
+                name="rating"
+                control={control}
+                render={({ field }) => (
+                  <RatingInput
+                    {...field}
+                    control={control}
+                    defaultValue={product?.rating}
+                  />
+                )}
+              />
+
               <label className="label">
                 {errors.image?.type === "required" && (
                   <span className="label-text-alt text-red-600 text-sm">
-                    {errors.image.message}
+                    {(errors.image as FieldError).message}
                   </span>
                 )}
               </label>
