@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { Controller, FieldError, useForm } from "react-hook-form";
+import { Controller, FieldError, FieldValues, useForm } from "react-hook-form";
 import { TCategory, TProduct } from "../../types";
 import {
   useAddProductMutation,
@@ -19,7 +19,7 @@ const ProductModal = ({ product, setProduct, setModalType }: any) => {
     register,
     formState: { errors },
     handleSubmit,
-  } = useForm({
+  } = useForm<FieldValues>({
     defaultValues: {
       name: product?.name,
       description: product?.description,

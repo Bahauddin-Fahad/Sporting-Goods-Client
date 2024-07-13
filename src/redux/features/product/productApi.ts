@@ -24,7 +24,7 @@ const productApi = baseApi.injectEndpoints({
         }
         const filteredCategories = categories
           ? Object.entries(categories)
-              .filter(([key, value]) => value === true)
+              .filter(([, value]) => value === true)
               .map(([key]) => key)
           : [];
 
