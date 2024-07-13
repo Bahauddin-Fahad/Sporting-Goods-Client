@@ -2,20 +2,16 @@
 
 import { Controller, FieldError, useForm } from "react-hook-form";
 import { TCategory, TProduct } from "../../types";
-import { useGetCategoriesQuery } from "../../redux/features/category/categoryApi";
+
 import {
   useAddProductMutation,
   useUpdateProductMutation,
 } from "../../redux/features/product/productApi";
 import RatingInput from "./RatingInput";
-
 import { toast } from "react-toastify";
+import categoryJson from "../../assets/jsons/categories.json";
 
 const ProductModal = ({ product, setProduct }: any) => {
-  const categoryName = product?.category?.name;
-
-  const { data } = useGetCategoriesQuery(undefined);
-  const categories = data?.data;
   const [addProduct, { data: addedData }] = useAddProductMutation();
   const [updateProduct, { data: updatedData }] = useUpdateProductMutation();
 
@@ -167,6 +163,7 @@ const ProductModal = ({ product, setProduct }: any) => {
               </label>
               <select
                 className="select bg-[#2E2D2D] text-white border-0 rounded-none focus:outline-none"
+                defaultValue={product?.category && product?.category}
                 {...register("category", {
                   required: {
                     value: true,
@@ -174,13 +171,11 @@ const ProductModal = ({ product, setProduct }: any) => {
                   },
                 })}
               >
-                <option disabled defaultValue={categoryName}>
+                <option disabled defaultValue={""}>
                   Select One
                 </option>
-                {categories?.map((category: TCategory, index: string) => (
-                  <option key={index} value={category._id}>
-                    {category?.name}
-                  </option>
+                {categoryJson?.map((category: TCategory, index: number) => (
+                  <option key={index}>{category?.name}</option>
                 ))}
               </select>
               <label className="label">

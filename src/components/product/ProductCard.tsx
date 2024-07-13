@@ -25,7 +25,7 @@ const ProductCard = ({ product }: Props) => {
         <h2 className="card-title">{product?.name}</h2>
         <p>{product?.description}</p>
         <p>Price: ${product?.price}</p>
-        <p>Category: {product?.category?.name}</p>
+        <p>Category: {product?.category}</p>
         <p>Brand: {product?.brand}</p>
         <p>Stock: {product?.stockQuantity} Pc</p>
         <p className="flex justify-start items-center gap-2">

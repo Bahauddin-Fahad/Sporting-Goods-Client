@@ -2,7 +2,6 @@
 import { Control, FieldValues } from "react-hook-form";
 
 export type TCategory = {
-  _id: string;
   name: string;
   image: string;
 };
@@ -17,7 +16,7 @@ export type TProduct = {
   description: string;
   price: number;
   image: string;
-  category: TCategory;
+  category: string;
   brand: string;
   stockQuantity: number;
   rating: number;

@@ -5,25 +5,21 @@ import ProductCard from "../../components/product/ProductCard";
 import { useGetProductsQuery } from "../../redux/features/product/productApi";
 import { TCategory, TProduct } from "../../types";
 import Loading from "../Loading/Loading";
-import { useGetCategoriesQuery } from "../../redux/features/category/categoryApi";
 
 import { IoSearchSharp } from "react-icons/io5";
 import { BiCategoryAlt } from "react-icons/bi";
 import { IoIosPricetags } from "react-icons/io";
 import "../../components/layout/MainLayout.css";
 import ReactSlider from "react-slider";
-
+import categoryJson from "../../assets/jsons/categories.json";
 const AllProducts = () => {
-  const { data: categoryData } = useGetCategoriesQuery(undefined);
-  const categories = categoryData?.data;
-
   const [searchTerm, setSearchTerm] = useState("");
   const [minValue, setMinValue] = useState(0);
-  const [maxValue, setMaxValue] = useState(500);
+  const [maxValue, setMaxValue] = useState(300);
   const [selectedSort, setSelectedSort] = useState("all");
   const [isResetButtonEnabled, setIsResetButtonEnabled] = useState(false);
   const [checkedState, setCheckedState] = useState(
-    categories?.reduce(
+    categoryJson?.reduce(
       (acc: { [x: string]: boolean }, category: { name: string | number }) => {
         acc[category?.name] = false;
         return acc;
@@ -31,6 +27,8 @@ const AllProducts = () => {
       {} as Record<string, boolean>
     )
   );
+  // console.log(categories);
+  console.log(checkedState);
 
   const [queryObj, setQueryObj] = useState({
     sort: selectedSort,
@@ -41,7 +39,11 @@ const AllProducts = () => {
       maxPrice: maxValue,
     },
   });
-  const { data: productData, isLoading } = useGetProductsQuery(queryObj);
+  const {
+    data: productData,
+    isLoading,
+    refetch,
+  } = useGetProductsQuery(queryObj);
   const products: TProduct[] = productData?.data;
 
   const handleSelectChange = (event: FormEvent) => {
@@ -51,11 +53,11 @@ const AllProducts = () => {
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
+    refetch();
   };
 
   const handleSearchProduct = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
     setIsResetButtonEnabled(true);
     (event.target as HTMLFormElement).reset();
   };
@@ -63,6 +65,7 @@ const AllProducts = () => {
     setIsResetButtonEnabled(true);
     setMinValue(values[0]);
     setMaxValue(values[1]);
+    refetch();
   };
   const handleCheckboxChange = (categoryName: string) => {
     setCheckedState((prevState: { [x: string]: any }) => {
@@ -73,6 +76,7 @@ const AllProducts = () => {
       setIsResetButtonEnabled(
         Object.values(newState).some((checked) => checked)
       );
+      refetch();
       return newState;
     });
   };
@@ -85,7 +89,7 @@ const AllProducts = () => {
     setCheckedState(resetState);
     setIsResetButtonEnabled(false);
     setMinValue(0);
-    setMaxValue(500);
+    setMaxValue(300);
     setSearchTerm("");
   };
 
@@ -100,7 +104,7 @@ const AllProducts = () => {
         maxPrice: maxValue,
       },
     });
-  }, [selectedSort, searchTerm, checkedState, minValue, maxValue]);
+  }, [selectedSort, searchTerm, checkedState, minValue, maxValue, refetch]);
 
   // useEffect(() => {
   //   window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
@@ -177,7 +181,7 @@ const AllProducts = () => {
             tabIndex={0}
             className="dropdown-content menu bg-secondary rounded-box z-[1] w-52 p-2 shadow"
           >
-            {categories?.map((singleCategory: TCategory) => (
+            {categoryJson?.map((singleCategory: TCategory) => (
               <div key={singleCategory?.name}>
                 <label className="inline-flex items-center">
                   <input
@@ -209,7 +213,7 @@ const AllProducts = () => {
           <ReactSlider
             className="slider"
             min={0}
-            max={500}
+            max={300}
             step={1} // adjust step value for finer control
             value={[minValue, maxValue]}
             onChange={handleSliderChange}
@@ -218,15 +222,22 @@ const AllProducts = () => {
             Price Range: ${minValue} - ${maxValue}
           </p>
         </div>
-        <div className="text-lg font-semibold text-black">
+
+        <div className="text-xl xl:text-2xl font-semibold text-white">
           <select
-            className="select select-bordered"
+            className="bg-transparent"
             value={selectedSort}
             onChange={handleSelectChange}
           >
-            <option value="all">Sort By Price</option>
-            <option value="ascending">Low to High</option>
-            <option value="descending">High to Low</option>
+            <option value="all" className="bg-secondary text-lg">
+              Sort By Price
+            </option>
+            <option value="ascending" className="bg-secondary text-lg">
+              Low to High
+            </option>
+            <option value="descending" className="bg-secondary text-lg">
+              High to Low
+            </option>
           </select>
         </div>
         <div className="">

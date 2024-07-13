@@ -1,26 +1,22 @@
 [
   {
     "name": "banner-1",
-    "bannerImage": "https://i.ibb.co/vX1J9gF/shoes.jpg"
+    "bannerImage": "https://i.ibb.co/C0G6qRp/shoes.jpg"
   },
   {
     "name": "banner-2",
-    "bannerImage": "https://i.ibb.co/DDLpD5t/tennisracket.jpg"
+    "bannerImage": "https://i.ibb.co/MZcjR67/tennisracket.jpg"
   },
   {
     "name": "banner-3",
-    "bannerImage": "https://i.ibb.co/jgpvsVs/boxinggloves.jpg"
+    "bannerImage": "https://i.ibb.co/VpHQTT6/boxinggloves.jpg"
   },
   {
     "name": "banner-4",
-    "bannerImage": "https://i.ibb.co/Zz89DnS/baseballbat.jpg"
+    "bannerImage": "https://i.ibb.co/FWKshB7/baseballbat.jpg"
   },
   {
     "name": "banner-5",
-    "bannerImage": "https://i.ibb.co/9HWn5SW/tennisball.jpg"
-  },
-  {
-    "name": "banner-6",
-    "bannerImage": "https://i.ibb.co/8YrPjbW/badminton.jpg"
+    "bannerImage": "https://i.ibb.co/qpqsPVt/tennisball.jpg"
   }
 ]

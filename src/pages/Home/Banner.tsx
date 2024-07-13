@@ -3,15 +3,13 @@ import "./Home.css";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { useGetBannersQuery } from "../../redux/features/banner/bannerApi";
+import bannerJSON from "../../assets/jsons/banners.json";
 import { TBanner } from "../../types";
 
 const Banner = () => {
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
   });
-  const { data } = useGetBannersQuery(undefined);
-  const banners = data?.data;
 
   const settings = {
     dots: true,
@@ -27,8 +25,8 @@ const Banner = () => {
     <div className="rounded-[20px]">
       <div className="slider-container">
         <Slider {...settings}>
-          {banners &&
-            banners?.map((banner: TBanner, index: number) => (
+          {bannerJSON &&
+            bannerJSON?.map((banner: TBanner, index: number) => (
               <div key={index}>
                 <img
                   src={banner?.bannerImage}

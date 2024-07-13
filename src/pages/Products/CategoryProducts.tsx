@@ -9,11 +9,12 @@ const CategoryProducts = () => {
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
   });
-  const { categoryId } = useParams();
-  const queryObj = { categoryId };
+  const { category } = useParams();
+  const queryObj = { category };
 
   const { data: productData, isLoading } = useGetProductsQuery(queryObj);
   const products: TProduct[] = productData?.data;
+
   if (isLoading) {
     return <Loading />;
   }
@@ -25,7 +26,7 @@ const CategoryProducts = () => {
             <span className="font-normal tracking-wide text-[#bdbdbd9e]">
               Equipments of
             </span>
-            <span className="text-accent">{products?.[0].category?.name}</span>
+            <span className="text-accent">{category}</span>
           </p>
         </div>
         <div className="flex justify-center items-center gap-x-3 lg:-mt-16 -mt-10 text-white "></div>

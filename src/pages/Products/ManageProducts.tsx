@@ -79,7 +79,7 @@ const ManageProducts = () => {
                   </td>
                   <td className="font-semibold">{product?.name}</td>
                   <td className="font-semibold">{product?.price}</td>
-                  <td className="font-semibold">{product?.category?.name}</td>
+                  <td className="font-semibold">{product?.category}</td>
                   <td className="font-semibold">{product?.brand}</td>
                   <td className="font-semibold">
                     <RatingInput

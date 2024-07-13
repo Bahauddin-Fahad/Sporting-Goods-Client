@@ -1,0 +1,34 @@
+[
+  {
+    "name": "Football",
+    "image": "https://i.ibb.co/n8zWqM3/football.png"
+  },
+  {
+    "name": "Baseball",
+    "image": "https://i.ibb.co/VmNJksK/baseball.png"
+  },
+  {
+    "name": "Basketball",
+    "image": "https://i.ibb.co/kKVS7gf/basketball.png"
+  },
+  {
+    "name": "Hockey",
+    "image": "https://i.ibb.co/RPJL3N5/hockey.png"
+  },
+  {
+    "name": "Boxing",
+    "image": "https://i.ibb.co/Z8xHDjk/boxing.png"
+  },
+  {
+    "name": "Tennis",
+    "image": "https://i.ibb.co/M9YKkwt/tennis.png"
+  },
+  {
+    "name": "Badminton",
+    "image": "https://i.ibb.co/bPwgRtM/badmintion.png"
+  },
+  {
+    "name": "Cricket",
+    "image": "https://i.ibb.co/ygG1T9y/cricket.png"
+  }
+]
