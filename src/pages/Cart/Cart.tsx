@@ -1,24 +1,67 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useEffect } from "react";
 import { ReactNode, useState } from "react";
 import { useForm } from "react-hook-form";
-import { FaCircleXmark } from "react-icons/fa6";
+import { FaCircleCheck, FaCircleXmark } from "react-icons/fa6";
 import { RiErrorWarningFill } from "react-icons/ri";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { removeProduct } from "../../redux/features/product/productSlice";
+import {
+  clearCart,
+  removeProduct,
+} from "../../redux/features/product/productSlice";
 import { toast } from "react-toastify";
+import {
+  useGetProductsQuery,
+  useUpdateProductMutation,
+} from "../../redux/features/product/productApi";
+import { useAddOrderMutation } from "../../redux/features/orders/ordersApi";
+import { TProduct } from "../../types";
+import { useNavigate } from "react-router-dom";
 const Cart = () => {
-  useEffect(() => {
-    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
-  });
-  const { handleSubmit, formState, register } = useForm();
-  const { errors } = formState;
+  const navigate = useNavigate();
+  // useEffect(() => {
+  //   window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+  // });
+
+  const {
+    handleSubmit,
+    formState: { errors, isDirty },
+    register,
+    reset,
+  } = useForm();
+
   const dispatch = useAppDispatch();
 
   const [togglePayment, setTogglePayment] = useState(false);
+  const [filteredProducts, setFilteredProducts] = useState<TProduct[]>([]);
+  const [updateProduct] = useUpdateProductMutation();
+  const [addOrder] = useAddOrderMutation();
 
-  const { product, quantities, subtotal } = useAppSelector(
-    (state) => state?.products
-  );
+  const queryObj = {
+    sort: "",
+    searchTerm: "",
+  };
+
+  const { data: productsResponse, isLoading } = useGetProductsQuery(queryObj);
+
+  const allProducts = productsResponse?.data;
+
+  const {
+    products: stateProducts,
+    quantities,
+    subtotal,
+  } = useAppSelector((state) => state.products);
+
+  useEffect(() => {
+    if (!isLoading) {
+      const stateProductIds = stateProducts.map((product) => product.id);
+      const filtered = allProducts.filter((product: TProduct) =>
+        stateProductIds.includes(product?._id)
+      );
+      setFilteredProducts(filtered);
+    }
+  }, [allProducts, stateProducts, isLoading]);
 
   const handleRemoveFromCart = (id: string) => {
     dispatch(removeProduct(id));
@@ -29,11 +72,79 @@ const Cart = () => {
   const taxes = subtotal * 0.05;
   const total = subtotal + shipping + taxes;
 
-  const handlePlaceOrder = async () => {
+  const handlePlaceOrder = async (formData: any) => {
     if (!togglePayment) {
       return toast.error("Please select delivery method");
     }
+
+    try {
+      const orderData = {
+        name: formData.name,
+        email: formData.email,
+        address: formData.address,
+        phone: formData.phone,
+        delivery: "Cash",
+        products: [] as string[],
+      };
+      console.log(orderData);
+
+      // Update quantities in the filtered products
+      for (const stateProduct of stateProducts) {
+        const { id } = stateProduct;
+        const quantity = quantities[id] || 0;
+        const filteredProduct = filteredProducts.find(
+          (product) => product._id === id
+        );
+
+        if (filteredProduct) {
+          const { stockQuantity, ...restData } = filteredProduct;
+          const updatedProduct = {
+            ...restData,
+            stockQuantity: filteredProduct.stockQuantity - quantity,
+          };
+
+          const options = {
+            id,
+            data: updatedProduct,
+          };
+
+          await updateProduct(options).unwrap();
+
+          // adding product ID to orderData's products array
+          orderData.products.push(id);
+        }
+      }
+
+      await addOrder(orderData).unwrap();
+      dispatch(clearCart());
+      reset();
+      navigate(-1);
+      toast.success("Order placed successfully!", { theme: "colored" });
+    } catch (error) {
+      console.log(error);
+
+      toast.error("Failed to place order. Please try again.", {
+        theme: "colored",
+      });
+    }
   };
+
+  useEffect(() => {
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      if (isDirty) {
+        const message =
+          "You have unsaved changes. Are you sure you want to leave?";
+        event.returnValue = message; // Legacy way for most browsers
+        return message; // For some browsers
+      }
+    };
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    // Cleanup event listener on component unmount
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [isDirty]);
+
   return (
     <div>
       <div
@@ -57,18 +168,17 @@ const Cart = () => {
               Checkout
             </h1>
           </div>
-
           <div className="lg:grid lg:grid-cols-2 lg:gap-x-12 xl:gap-x-16">
             <div>
               <div>
-                <h2 className="text-lg font-medium text-gray-900">
+                <h2 className="text-lg font-medium text-accent">
                   Contact information
                 </h2>
 
                 <div className="mt-4">
                   <label
                     htmlFor="email-address"
-                    className="block text-sm font-medium text-gray-700"
+                    className="block text-sm font-medium text-white"
                   >
                     Email address
                   </label>
@@ -81,7 +191,7 @@ const Cart = () => {
                           message: "User Email is required",
                         },
                       })}
-                      className="block w-full bg-transparent p-2 border border-gray-300 outline-none invalid:border-orange-500 transition placeholder-slate-400 focus:ring-1 focus:border-orange-500 rounded-lg focus:ring-[#e08534]"
+                      className="block w-full bg-transparent p-2 border border-gray-300 outline-none  transition placeholder-slate-400 focus:ring-1 rounded-lg text-white"
                     />
                     <p className="text-sm text-red-600 font-medium  mt-2">
                       {errors?.email?.message as ReactNode}
@@ -91,7 +201,7 @@ const Cart = () => {
               </div>
 
               <div className="mt-10 border-t border-gray-200 pt-10">
-                <h2 className="text-lg font-medium text-gray-900">
+                <h2 className="text-lg font-medium text-accent">
                   Shipping information
                 </h2>
 
@@ -99,7 +209,7 @@ const Cart = () => {
                   <div className="sm:col-span-2">
                     <label
                       htmlFor="first-name"
-                      className="block text-sm font-medium text-gray-700"
+                      className="block text-sm font-medium text-white"
                     >
                       Full Name
                     </label>
@@ -112,9 +222,9 @@ const Cart = () => {
                             message: "Name is required",
                           },
                         })}
-                        className="block w-full bg-transparent p-2 border border-gray-300 outline-none invalid:border-orange-500 transition placeholder-slate-400 focus:ring-1 focus:border-orange-500 rounded-lg focus:ring-[#e08534]"
+                        className="block w-full bg-transparent p-2 border border-gray-300 outline-none  transition placeholder-slate-400 focus:ring-1 rounded-lg text-white"
                       />
-                      <p className="text-sm text-red-600 font-medium  mt-2">
+                      <p className="text-sm text-red-600 font-medium mt-2">
                         {errors?.name?.message as ReactNode}
                       </p>
                     </div>
@@ -123,7 +233,7 @@ const Cart = () => {
                   <div className="sm:col-span-2">
                     <label
                       htmlFor="address"
-                      className="block text-sm font-medium text-gray-700"
+                      className="block text-sm font-medium text-white"
                     >
                       Address
                     </label>
@@ -136,7 +246,7 @@ const Cart = () => {
                             message: "Address is required",
                           },
                         })}
-                        className="block w-full bg-transparent p-2 border border-gray-300 outline-none invalid:border-orange-500 transition placeholder-slate-400 focus:ring-1 focus:border-orange-500 rounded-lg focus:ring-[#e08534]"
+                        className="block w-full bg-transparent p-2 border border-gray-300 outline-none  transition placeholder-slate-400 focus:ring-1 rounded-lg text-white"
                       />
                       <p className="text-sm text-red-600 font-medium  mt-2">
                         {errors?.address?.message as ReactNode}
@@ -147,7 +257,7 @@ const Cart = () => {
                   <div className="sm:col-span-2">
                     <label
                       htmlFor="phone"
-                      className="block text-sm font-medium text-gray-700"
+                      className="block text-sm font-medium text-white"
                     >
                       Phone
                     </label>
@@ -160,23 +270,22 @@ const Cart = () => {
                             message: "Phone Number is required",
                           },
                         })}
-                        className="block w-full bg-transparent p-2 border border-gray-300 outline-none invalid:border-orange-500 transition placeholder-slate-400 focus:ring-1 focus:border-orange-500 rounded-lg focus:ring-[#e08534]"
+                        className="block w-full bg-transparent p-2 border border-gray-300 outline-none  transition placeholder-slate-400 focus:ring-1 rounded-lg text-white"
                       />
                     </div>
                   </div>
                 </div>
               </div>
-
               <div className="mt-10 border-t border-gray-200 pt-10">
                 <fieldset>
                   <div className="flex gap-3">
-                    <legend className="text-lg font-medium text-gray-900">
+                    <legend className="text-lg font-medium text-accent">
                       Delivery method
                     </legend>
                     {!togglePayment && (
                       <div className="flex gap-2 items-center">
-                        <RiErrorWarningFill className="text-[#e08534]" />
-                        <h1 className="text-sm text-[#e08534]">
+                        <RiErrorWarningFill className="text-error" />
+                        <h1 className="text-sm text-error">
                           Please select delivery method
                         </h1>
                       </div>
@@ -187,84 +296,66 @@ const Cart = () => {
                     <label
                       onClick={() => setTogglePayment(!togglePayment)}
                       className={`relative border rounded-lg shadow-sm p-4 flex cursor-pointer focus:outline-none ${
-                        togglePayment ? "bg-green-200" : "bg-white"
+                        togglePayment ? "glass" : "bg-black opacity-50"
                       }`}
                     >
                       <div className="flex-1 flex">
                         <div className="flex flex-col">
                           <span
                             id="delivery-method-0-label"
-                            className="block text-sm font-medium text-gray-900"
+                            className="block text-sm font-medium text-accent"
                           >
-                            {" "}
-                            Cash on Delivery{" "}
+                            Cash on Delivery
                           </span>
                           <span
                             id="delivery-method-0-description-0"
-                            className="mt-1 flex items-center text-sm text-gray-500"
+                            className="mt-1 flex items-center text-sm text-white"
                           >
-                            {" "}
-                            4–10 business days{" "}
+                            4–10 business days
                           </span>
                           <span
                             id="delivery-method-0-description-1"
-                            className="mt-6 text-sm font-medium text-gray-900"
+                            className="mt-6 text-sm font-medium text-accent"
                           >
-                            {" "}
                             $5.00{" "}
                           </span>
                         </div>
                       </div>
-
-                      <svg
-                        className="h-5 w-5 text-[#e08534]"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                        aria-hidden="true"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-
+                      {togglePayment ? (
+                        <FaCircleCheck className="text-lg text-accent" />
+                      ) : (
+                        <FaCircleXmark className="text-lg text-error" />
+                      )}
                       <div
                         className="absolute -inset-px rounded-lg border-2 pointer-events-none"
                         aria-hidden="true"
                       ></div>
                     </label>
 
-                    <label className="relative bg-white border rounded-lg shadow-sm p-4 flex focus:outline-none cursor-not-allowed">
+                    <label className="relative bg-black border rounded-lg shadow-sm p-4 flex focus:outline-none cursor-not-allowed opacity-50">
                       <div className="flex-1 flex">
                         <div className="flex flex-col">
                           <span
                             id="delivery-method-1-label"
-                            className="block text-sm font-medium text-gray-900"
+                            className="block text-sm font-medium text-accent"
                           >
-                            {" "}
-                            Stripe Payment{" "}
+                            Stripe Payment
                           </span>
                           <span
                             id="delivery-method-1-description-0"
                             className="mt-1 flex items-center text-sm text-gray-500"
                           >
-                            {" "}
-                            Currently Unavailable{" "}
+                            Currently Unavailable
                           </span>
                           <span
                             id="delivery-method-1-description-1"
-                            className="mt-6 text-sm font-medium text-gray-900"
+                            className="mt-6 text-sm font-medium text-accent"
                           >
-                            {" "}
                             <span className="line-through">$16.00</span>
                           </span>
                         </div>
                       </div>
-
-                      <FaCircleXmark className="text-lg text-[#e08534]" />
-
+                      <FaCircleXmark className="text-lg text-error" />
                       <div
                         className="absolute -inset-px rounded-lg border-2 pointer-events-none"
                         aria-hidden="true"
@@ -276,84 +367,82 @@ const Cart = () => {
             </div>
 
             <div className="mt-10 lg:mt-0">
-              <h2 className="text-lg font-medium text-gray-900">
-                Order summary
-              </h2>
-
-              <div className="mt-4 bg-white border border-gray-200 rounded-lg shadow-sm">
+              <h2 className="text-lg font-medium text-accent">Order summary</h2>
+              <div className="mt-4 bg-secondary border border-gray-200 rounded-lg shadow-sm">
                 <div>
-                  {product.length > 0 &&
-                    product.map((singleProduct) => (
-                      <div>
-                        <ul role="list" className="divide-y divide-gray-200">
-                          <li className="flex py-6 px-4 sm:px-6">
-                            <div className="flex-shrink-0">
-                              <img
-                                src={singleProduct.image}
-                                alt=""
-                                className="w-20 rounded-md object-contain"
-                              />
-                            </div>
+                  {stateProducts?.length > 0 &&
+                    stateProducts?.map((singleProduct, index) => (
+                      <ul
+                        key={index}
+                        role="list"
+                        className="divide-y divide-gray-200"
+                      >
+                        <li className="flex py-6 px-4 sm:px-6">
+                          <div className="flex-shrink-0">
+                            <img
+                              src={singleProduct.image}
+                              alt=""
+                              className="w-20 rounded-md object-contain"
+                            />
+                          </div>
 
-                            <div className="ml-6 flex-1 flex flex-col">
-                              <div className="flex">
-                                <div className="min-w-0 flex-1">
-                                  <h4 className="text-sm">
-                                    <a
-                                      href="#"
-                                      className="text-gray-700 text-lg font-semibold"
-                                    >
-                                      {" "}
-                                      {singleProduct.name}{" "}
-                                    </a>
-                                  </h4>
-                                  <p className="mt-1 text-sm text-gray-500">
-                                    x{quantities[singleProduct.id]}
-                                  </p>
-                                </div>
-
-                                <div className="ml-4 flex-shrink-0 flow-root">
-                                  <FaCircleXmark
-                                    onClick={() =>
-                                      handleRemoveFromCart(singleProduct.id)
-                                    }
-                                    className="text-[#033955] cursor-pointer text-lg"
-                                  />
-                                </div>
-                              </div>
-
-                              <div className="flex-1 pt-2 flex items-end justify-between">
-                                <p className="mt-1 text-sm font-medium text-gray-900">
-                                  ${singleProduct.price}.00
+                          <div className="ml-6 flex-1 flex flex-col">
+                            <div className="flex">
+                              <div className="min-w-0 flex-1">
+                                <h4 className="text-sm">
+                                  <a
+                                    href="#"
+                                    className="text-white text-lg font-semibold"
+                                  >
+                                    {singleProduct.name}{" "}
+                                  </a>
+                                </h4>
+                                <p className="mt-1 text-sm text-gray-500">
+                                  x{quantities[singleProduct.id]}
                                 </p>
                               </div>
+
+                              <div className="ml-4 flex-shrink-0 flow-root">
+                                <FaCircleXmark
+                                  onClick={() =>
+                                    handleRemoveFromCart(singleProduct.id)
+                                  }
+                                  className="text-error cursor-pointer text-lg"
+                                />
+                              </div>
                             </div>
-                          </li>
-                        </ul>
-                      </div>
+
+                            <div className="flex-1 pt-2 flex items-end justify-between">
+                              <p className="mt-1 text-sm font-medium text-accent">
+                                ${singleProduct.price}.00
+                              </p>
+                            </div>
+                          </div>
+                        </li>
+                      </ul>
                     ))}
-                  <div className="border-t border-gray-200 py-6 px-4 space-y-6 sm:px-6">
+                  <div className="border-t border-gray-200 py-6 px-4 space-y-6 sm:px-6 text-white">
                     <div className="flex items-center justify-between">
                       <dt className="text-sm">Subtotal</dt>
-                      <dd className="text-sm font-medium text-gray-900">
+                      <dd className="text-sm font-medium text-accent">
                         ${subtotal.toFixed(2)}
                       </dd>
                     </div>
                     <div className="flex items-center justify-between">
                       <dt className="text-sm">Shipping</dt>
-                      <dd className="text-sm font-medium text-gray-900">
+                      <dd className="text-sm font-medium text-accent">
                         ${shipping}.00
                       </dd>
                     </div>
                     <div className="flex items-center justify-between">
                       <dt className="text-sm">Taxes</dt>
-                      <dd className="text-sm font-medium text-gray-900">
+                      <dd className="text-sm font-medium text-accent">
                         ${taxes.toFixed(2)}
                       </dd>
                     </div>
                     <div className="flex items-center justify-between border-t border-gray-200 pt-6">
                       <dt className="text-base font-medium">Total</dt>
-                      <dd className="text-base font-medium text-gray-900">
+                      <dd className="text-base font-medium text-accent">
                         ${total.toFixed(2)}
                       </dd>
                     </div>
@@ -363,7 +452,7 @@ const Cart = () => {
                 <div className="border-t border-gray-200 py-6 px-4 sm:px-6">
                   <button
                     type="submit"
-                    className="w-full bg-[#e08534] btn-custom border-transparent rounded-md shadow-sm py-3 px-4 text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-orange-500"
+                    className="w-full bg-accent btn-custom border-transparent rounded-md shadow-sm py-3 px-4 text-base font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 "
                   >
                     Confirm order
                   </button>

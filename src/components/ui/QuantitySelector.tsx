@@ -2,15 +2,15 @@ import { CiCirclePlus, CiCircleMinus } from "react-icons/ci";
 
 interface QuantitySelectorProps {
   quantity: number;
-  increment: () => void;
-  decrement: () => void;
+  handleIncrement: () => void;
+  handleDecrement: () => void;
   inStock: number;
 }
 
 const QuantitySelector = ({
   quantity,
-  increment,
-  decrement,
+  handleIncrement,
+  handleDecrement,
   inStock,
 }: QuantitySelectorProps) => {
   return (
@@ -21,7 +21,7 @@ const QuantitySelector = ({
       >
         <button
           type="button"
-          onClick={decrement}
+          onClick={handleDecrement}
           disabled={quantity <= 0}
           data-hs-input-number-decrement=""
         >
@@ -30,7 +30,7 @@ const QuantitySelector = ({
         <p className="text-center text-2xl">{quantity}</p>
         <button
           type="button"
-          onClick={increment}
+          onClick={handleIncrement}
           disabled={inStock <= 0}
           data-hs-input-number-increment=""
         >

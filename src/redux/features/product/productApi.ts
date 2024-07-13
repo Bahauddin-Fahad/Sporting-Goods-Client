@@ -19,11 +19,9 @@ const productApi = baseApi.injectEndpoints({
         if (category) {
           params.append("category", category);
         }
-
         if (searchTerm) {
           params.append("searchTerm", searchTerm);
         }
-
         const filteredCategories = categories
           ? Object.entries(categories)
               .filter(([key, value]) => value === true)
@@ -33,7 +31,6 @@ const productApi = baseApi.injectEndpoints({
         filteredCategories.forEach((category) => {
           params.append("category", category);
         });
-
         if (priceRange) {
           const { minPrice, maxPrice } = priceRange;
           if (minPrice !== undefined) {
@@ -47,7 +44,6 @@ const productApi = baseApi.injectEndpoints({
           const sortValue = sort === "descending" ? "-price" : "price";
           params.append("sort", sortValue);
         }
-
         if (page) {
           params.append("page", page);
         }

@@ -25,7 +25,7 @@ const ProductDetails = () => {
   const [inStock, setInStock] = useState(productDetails?.stockQuantity || 0);
 
   const isDisabled = !(inStock && quantity);
-  const { product } = useAppSelector((state) => state.products);
+  const { products } = useAppSelector((state) => state.products);
 
   useEffect(() => {
     if (productDetails?.stockQuantity) {
@@ -33,14 +33,14 @@ const ProductDetails = () => {
     }
   }, [productDetails]);
 
-  const increment = () => {
+  const handleIncrement = () => {
     if (inStock > 1) {
       setQuantity((prev) => prev + 1);
       setInStock((prev: number) => prev - 1);
     }
   };
 
-  const decrement = () => {
+  const handleDecrement = () => {
     if (quantity > 0) {
       setQuantity((prev) => prev - 1);
       setInStock((prev: number) => prev + 1);
@@ -48,7 +48,9 @@ const ProductDetails = () => {
   };
 
   const handleAddToCart = () => {
-    const existingProduct = product.find((p) => p.id === productDetails?._id);
+    const existingProduct = products.find(
+      (product) => product.id === productDetails?._id
+    );
 
     if (existingProduct) {
       // Product already exists in the cart
@@ -161,8 +163,8 @@ const ProductDetails = () => {
               </div>
               <QuantitySelector
                 quantity={quantity}
-                increment={increment}
-                decrement={decrement}
+                handleIncrement={handleIncrement}
+                handleDecrement={handleDecrement}
                 inStock={inStock}
               />
             </div>
