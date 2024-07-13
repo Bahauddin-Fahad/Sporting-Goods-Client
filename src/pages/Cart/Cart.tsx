@@ -134,7 +134,7 @@ const Cart = () => {
       if (isDirty) {
         const message =
           "You have unsaved changes. Are you sure you want to leave?";
-        event?.returnValue = message; // Legacy way for most browsers
+        event.returnValue = message; // Legacy way for most browsers
         return message; // For some browsers
       }
     };
