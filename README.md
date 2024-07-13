@@ -16,7 +16,7 @@ Click here to see the Server Side Live Link: [https://sporting-goods-server-beig
 
 ## Server Repository Link
 
-Click here to see the Server Side Repository Link: [https://sporting-goods-server-beige.vercel.app](https://sporting-goods-server-beige.vercel.app)
+Click here to see the Server Side Repository Link: [https://github.com/Bahauddin-Fahad/Sporting-Goods-Server](https://github.com/Bahauddin-Fahad/Sporting-Goods-Server)
 
 ## Project Features
 
