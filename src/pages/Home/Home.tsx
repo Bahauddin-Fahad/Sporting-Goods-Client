@@ -5,7 +5,7 @@ import HomeProducts from "./HomeProducts";
 
 const Home = () => {
   return (
-    <div className="space-y-24">
+    <div className="space-y-10 md:space-y-16 lg:space-y-24">
       <Banner />
       <HomeProducts />
       <Categories />

@@ -3,18 +3,23 @@ import ProductCard from "../../components/product/ProductCard";
 import { useGetProductsQuery } from "../../redux/features/product/productApi";
 import { TProduct } from "../../types";
 import { AiFillProduct } from "react-icons/ai";
+import Loading from "../Loading/Loading";
 
 const HomeProducts = () => {
   const navigate = useNavigate();
-  const { data } = useGetProductsQuery(undefined);
-  const products: TProduct[] = data?.data;
+  const { data: productData, isLoading } = useGetProductsQuery({});
+  const products: TProduct[] = productData?.data;
+
+  if (isLoading) {
+    return <Loading />;
+  }
   return (
-    <div className="flex flex-col space-y-10">
-      <div className="flex gap-2 text-5xl text-white">
+    <div className="flex flex-col space-y-5 lg:space-y-10">
+      <div className="flex gap-2 text-3xl lg:text-5xl text-white">
         <AiFillProduct className="text-accent" />
         <h1 className="font-semibold">Our Products</h1>
       </div>
-      <div className="grid grid-cols-3 gap-10">
+      <div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-10">
         {products?.slice(0, 6)?.map((product: TProduct, index: number) => (
           <div key={index}>
             <ProductCard product={product} />

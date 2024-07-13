@@ -17,8 +17,6 @@ const RatingInput: React.FC<RatingInputProps> = ({
   defaultValue = 0,
   readOnly = false,
 }) => {
-  console.log(defaultValue);
-
   const starStyle = {
     fontSize: readOnly ? "1.2rem" : "2rem",
     color: "gold",
@@ -41,7 +39,7 @@ const RatingInput: React.FC<RatingInputProps> = ({
   const handleChange = readOnly ? undefined : field.onChange;
 
   return (
-    <div>
+    <>
       <Rating
         initialRating={value}
         onChange={handleChange}
@@ -51,7 +49,7 @@ const RatingInput: React.FC<RatingInputProps> = ({
       />
 
       {control && fieldState?.error && <p>{fieldState.error.message}</p>}
-    </div>
+    </>
   );
 };
 

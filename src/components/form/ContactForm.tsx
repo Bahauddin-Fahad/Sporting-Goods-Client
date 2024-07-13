@@ -3,7 +3,7 @@ import { MdEmail, MdLocationPin } from "react-icons/md";
 const Form = () => {
   return (
     <div className="space-y-5">
-      <div className="grid grid-cols-4 gap-5">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
         <div
           data-aos="zoom-in"
           className="flex flex-col items-center gap-2 border border-white p-5 rounded-2xl h-full"

@@ -11,7 +11,7 @@ const ManageProducts = () => {
   const [product, setProduct] = useState({} || null);
   const [deleteProduct, setDeleteProduct] = useState({} || null);
 
-  const { data, isLoading } = useGetProductsQuery(undefined);
+  const { data, isLoading } = useGetProductsQuery({});
   const products: TProduct[] = data?.data;
 
   useEffect(() => {
@@ -23,7 +23,7 @@ const ManageProducts = () => {
   }
 
   return (
-    <div className="text-black">
+    <div className="text-white">
       <div
         className="h-[200px] flex flex-col justify-center items-center"
         data-aos="zoom-in"
@@ -48,9 +48,9 @@ const ManageProducts = () => {
         </label>
       </div>
       <div className="overflow-x-auto m-5 ">
-        <table className="table table-sm glass bg-white">
+        <table className="table table-sm">
           {/* head */}
-          <thead className="text-black">
+          <thead className="text-white text-lg">
             <tr>
               <th>No.</th>
               <th>Image</th>
@@ -69,7 +69,7 @@ const ManageProducts = () => {
                   <th>{index + 1}</th>
                   {/* <th>{index + 1 + (currentPage - 1) * dataPerPage}</th> */}
                   <td>
-                    <div className="w-20 p-2 rounded-md glass bg-black">
+                    <div className="w-20 p-2 rounded-md glass bg-black cursor-pointer">
                       <PhotoProvider>
                         <PhotoView src={product.image}>
                           <img src={product.image} alt="Post" className="" />

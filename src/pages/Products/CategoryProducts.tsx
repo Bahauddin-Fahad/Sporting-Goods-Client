@@ -10,9 +10,10 @@ const CategoryProducts = () => {
     window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
   });
   const { categoryId } = useParams();
+  const queryObj = { categoryId };
 
-  const { data, isLoading } = useGetProductsQuery(categoryId);
-  const products: TProduct[] = data?.data;
+  const { data: productData, isLoading } = useGetProductsQuery(queryObj);
+  const products: TProduct[] = productData?.data;
   if (isLoading) {
     return <Loading />;
   }

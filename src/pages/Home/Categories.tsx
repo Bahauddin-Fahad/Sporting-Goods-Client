@@ -8,12 +8,12 @@ const Categories = () => {
   const categories = data?.data;
 
   return (
-    <div className="flex flex-col space-y-10">
-      <div className="flex gap-2 text-5xl text-white">
+    <div className="flex flex-col space-y-5 lg:space-y-10">
+      <div className="flex gap-2 text-3xl lg:text-5xl text-white">
         <BiSolidCategory className="text-accent" />
         <h1 className="font-semibold">Categories</h1>
       </div>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
+      <div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
         {categories?.map((category: TCategory, index: string) => (
           <div
             key={index}

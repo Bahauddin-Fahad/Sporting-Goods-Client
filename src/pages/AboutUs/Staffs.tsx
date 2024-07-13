@@ -24,9 +24,9 @@ const Staffs = () => {
         <div className={`mx-auto`}>
           <Slider {...settings} className="mx-auto">
             {staffs.map((staff, i) => (
-              <div className={`px-3 slide flex-col lg:flex-row`} key={i}>
+              <div className={`px-3 slide flex-row`} key={i}>
                 <img
-                  className="block object-contain lg:h-[80vh] mx-auto lg:mx-0"
+                  className="block object-contain h-[60vh] lg:h-[80vh] mx-auto lg:mx-0"
                   src={staff.image}
                   alt=""
                 />

@@ -1,13 +1,46 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 import { baseApi } from "../../api/baseApi";
 
 const productApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getProducts: builder.query({
-      query: (id) => {
+      query: (queryObj) => {
         const params = new URLSearchParams();
-        if (id) {
-          params.append("categoryId", id);
+        const { searchTerm, sort, categories, priceRange } = queryObj || {};
+        if (queryObj.categoryId) {
+          params.append("categoryId", queryObj.categoryId);
         }
+
+        if (searchTerm) {
+          params.append("searchTerm", searchTerm);
+        }
+
+        const filteredCategories = categories
+          ? Object.entries(categories)
+              .filter(([key, value]) => value === true)
+              .map(([key]) => key)
+          : [];
+
+        filteredCategories.forEach((category) => {
+          params.append("category", category);
+        });
+
+        if (priceRange) {
+          const { minPrice, maxPrice } = priceRange;
+          if (minPrice !== undefined) {
+            params.append("minPrice", minPrice);
+          }
+          if (maxPrice !== undefined) {
+            params.append("maxPrice", maxPrice);
+          }
+        }
+
+        if (sort) {
+          const sortValue = sort === "descending" ? "-price" : "price";
+          params.append("sort", sortValue);
+        }
+
         return { url: "/products", method: "GET", params };
       },
       providesTags: ["product"],

@@ -1,17 +1,110 @@
-import { useEffect } from "react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import ProductCard from "../../components/product/ProductCard";
 import { useGetProductsQuery } from "../../redux/features/product/productApi";
-import { TProduct } from "../../types";
-import { BsSortDownAlt } from "react-icons/bs";
+import { TCategory, TProduct } from "../../types";
 import Loading from "../Loading/Loading";
+import { useGetCategoriesQuery } from "../../redux/features/category/categoryApi";
+
+import { IoSearchSharp } from "react-icons/io5";
+import { BiCategoryAlt } from "react-icons/bi";
+import { IoIosPricetags } from "react-icons/io";
+import "../../components/layout/MainLayout.css";
+import ReactSlider from "react-slider";
 
 const AllProducts = () => {
-  useEffect(() => {
-    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
-  });
+  const { data: categoryData } = useGetCategoriesQuery(undefined);
+  const categories = categoryData?.data;
 
-  const { data, isLoading } = useGetProductsQuery(undefined);
-  const products: TProduct[] = data?.data;
+  const [searchTerm, setSearchTerm] = useState("");
+  const [minValue, setMinValue] = useState(0);
+  const [maxValue, setMaxValue] = useState(500);
+  const [selectedSort, setSelectedSort] = useState("all");
+  const [isResetButtonEnabled, setIsResetButtonEnabled] = useState(false);
+  const [checkedState, setCheckedState] = useState(
+    categories?.reduce(
+      (acc: { [x: string]: boolean }, category: { name: string | number }) => {
+        acc[category?.name] = false;
+        return acc;
+      },
+      {} as Record<string, boolean>
+    )
+  );
+
+  const [queryObj, setQueryObj] = useState({
+    sort: selectedSort,
+    searchTerm: searchTerm,
+    categories: checkedState,
+    priceRange: {
+      minPrice: minValue,
+      maxPrice: maxValue,
+    },
+  });
+  const { data: productData, isLoading } = useGetProductsQuery(queryObj);
+  const products: TProduct[] = productData?.data;
+
+  const handleSelectChange = (event: FormEvent) => {
+    // Update the state with the selected value
+    setSelectedSort((event.target as HTMLFormElement).value);
+  };
+
+  const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(event.target.value);
+  };
+
+  const handleSearchProduct = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    setIsResetButtonEnabled(true);
+    (event.target as HTMLFormElement).reset();
+  };
+  const handleSliderChange = (values: number[]) => {
+    setIsResetButtonEnabled(true);
+    setMinValue(values[0]);
+    setMaxValue(values[1]);
+  };
+  const handleCheckboxChange = (categoryName: string) => {
+    setCheckedState((prevState: { [x: string]: any }) => {
+      const newState = {
+        ...prevState,
+        [categoryName]: !prevState?.[categoryName],
+      };
+      setIsResetButtonEnabled(
+        Object.values(newState).some((checked) => checked)
+      );
+      return newState;
+    });
+  };
+
+  const handleReset = () => {
+    const resetState = Object.keys(checkedState).reduce((acc, key) => {
+      acc[key] = false;
+      return acc;
+    }, {} as Record<string, boolean>);
+    setCheckedState(resetState);
+    setIsResetButtonEnabled(false);
+    setMinValue(0);
+    setMaxValue(500);
+    setSearchTerm("");
+  };
+
+  useEffect(() => {
+    // Update queryObj whenever selectedSort changes
+    setQueryObj({
+      sort: selectedSort,
+      searchTerm: searchTerm,
+      categories: checkedState,
+      priceRange: {
+        minPrice: minValue,
+        maxPrice: maxValue,
+      },
+    });
+  }, [selectedSort, searchTerm, checkedState, minValue, maxValue]);
+
+  // useEffect(() => {
+  //   window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+  // }, [products]);
 
   if (isLoading) {
     return <Loading />;
@@ -40,66 +133,114 @@ const AllProducts = () => {
         </div>
         <div className="flex justify-center items-center gap-x-3 lg:-mt-16 -mt-10 text-white "></div>
       </div>
-      <div className="flex justify-between">
-        <div className="form-control max-w-sm">
-          <label className="label">
-            <span className="label-text text-white font-semibold">Search</span>
-          </label>
+      <form className="w-full max-w-7xl" onSubmit={handleSearchProduct}>
+        <label
+          htmlFor="default-search"
+          className="mb-2 text-sm font-medium text-gray-900 sr-only"
+        >
+          Search
+        </label>
+        <div className="relative">
+          <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+            <IoSearchSharp />
+          </div>
           <input
             type="text"
-            className="input input-bordered bg-[#F6F6F6] border-0 rounded focus:outline-none"
-            placeholder={"Type Here"}
-            // {...register("price", {
-            //   required: {
-            //     value: true,
-            //     message: "Price is required",
-            //   },
-            // })}
+            id="default-search"
+            onBlur={handleInputChange}
+            className="block w-full p-4 ps-10 text-sm border-2 border-accent glass rounded-lg text-white"
+            placeholder="Search Products..."
+            required
           />
-          {/* <label className="label">
-              {errors.price?.type === "required" && (
-                <span className="label-text-alt text-red-600 text-sm">
-                  {errors.price.message}
-                </span>
-              )}
-            </label> */}
+          <button
+            type="submit"
+            className="text-black font-bold absolute end-2.5 bottom-2.5 bg-accent hover:bg-[] rounded-lg text-sm px-4 py-2"
+          >
+            Search
+          </button>
         </div>
-        <div className="form-control max-w-sm">
-          <label className="label">
-            <span className="label-text text-white font-semibold">Search</span>
-          </label>
-          <input
-            type="text"
-            className="input input-bordered bg-[#F6F6F6] border-0 rounded focus:outline-none"
-            placeholder={"Type Here"}
-            // {...register("price", {
-            //   required: {
-            //     value: true,
-            //     message: "Price is required",
-            //   },
-            // })}
+      </form>
+
+      <div className="text-white flex items-center justify-between w-full">
+        <div className="dropdown">
+          <div
+            tabIndex={0}
+            role="button"
+            className="m-1 flex gap-3 items-center"
+          >
+            <BiCategoryAlt className="text-2xl" />
+            <h1 className="text-xl xl:text-2xl font-semibold">
+              Filter by Categories
+            </h1>
+          </div>
+          <ul
+            tabIndex={0}
+            className="dropdown-content menu bg-secondary rounded-box z-[1] w-52 p-2 shadow"
+          >
+            {categories?.map((singleCategory: TCategory) => (
+              <div key={singleCategory?.name}>
+                <label className="inline-flex items-center">
+                  <input
+                    type="checkbox"
+                    className="hidden"
+                    checked={checkedState?.[singleCategory?.name]}
+                    onChange={() => handleCheckboxChange(singleCategory?.name)}
+                  />
+                  <span
+                    className={`w-4 h-4 inline-block rounded-full border-2 ${
+                      checkedState?.[singleCategory?.name]
+                        ? "border-white bg-accent"
+                        : "border-gray-300"
+                    } flex items-center justify-center cursor-pointer`}
+                  ></span>
+                  <span className="select-none ml-3 md:text-sm xl:text-lg">
+                    {singleCategory?.name}
+                  </span>
+                </label>
+              </div>
+            ))}
+          </ul>
+        </div>
+        <div className="space-y-4 text-white">
+          <div className="flex gap-3 items-center">
+            <IoIosPricetags className="text-lg" />
+            <h1 className="text-lg font-semibold">Price</h1>
+          </div>
+          <ReactSlider
+            className="slider"
+            min={0}
+            max={500}
+            step={1} // adjust step value for finer control
+            value={[minValue, maxValue]}
+            onChange={handleSliderChange}
           />
-          {/* <label className="label">
-              {errors.price?.type === "required" && (
-                <span className="label-text-alt text-red-600 text-sm">
-                  {errors.price.message}
-                </span>
-              )}
-            </label> */}
+          <p className="xl:text-md font-medium">
+            Price Range: ${minValue} - ${maxValue}
+          </p>
         </div>
-        <div className="form-control max-w-sm">
-          <label className="label">
-            <div className="flex gap-2 justify-center items-center">
-              <BsSortDownAlt className="text-white" />
-              <span className="label-text text-white font-semibold">
-                Sort By Price
-              </span>
-            </div>
-          </label>
-          <select className="select select-bordered w-full max-w-xs font-semibold">
-            <option>Low to High</option>
-            <option>High to Low</option>
+        <div className="text-lg font-semibold text-black">
+          <select
+            className="select select-bordered"
+            value={selectedSort}
+            onChange={handleSelectChange}
+          >
+            <option value="all">Sort By Price</option>
+            <option value="ascending">Low to High</option>
+            <option value="descending">High to Low</option>
           </select>
+        </div>
+        <div className="">
+          <button
+            onClick={handleReset}
+            disabled={!isResetButtonEnabled}
+            className={`px-4 py-2 rounded ${
+              isResetButtonEnabled
+                ? "bg-accent text-black cursor-pointer"
+                : "bg-gray-300 text-gray-500 cursor-not-allowed"
+            }`}
+          >
+            Reset Filters
+          </button>
         </div>
       </div>
       <div className="grid grid-cols-3 gap-10">
@@ -109,6 +250,20 @@ const AllProducts = () => {
           </div>
         ))}
       </div>
+      {/* <div className="space-x-3 mt-4">
+        {totalPagesArray?.length > 1 &&
+          totalPagesArray.map((page: number, index: Key | null | undefined) => (
+            <button
+              key={index}
+              onClick={() => handleCurrentPage(page)}
+              className={`btn btn-sm ${
+                page + 1 === currentPage && "btn-accent"
+              }`}
+            >
+              {page + 1}
+            </button>
+          ))}
+      </div> */}
     </div>
   );
 };
