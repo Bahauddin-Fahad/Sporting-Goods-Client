@@ -56,7 +56,8 @@ const ProductModal = ({ product, setProduct, setModalType }: any) => {
       theme: "colored",
       toastId: "added",
     });
-    setProduct(null);
+    setModalType("");
+    setProduct({});
   }
 
   const handleEditProduct = (details: Partial<TProduct>) => {
@@ -72,7 +73,8 @@ const ProductModal = ({ product, setProduct, setModalType }: any) => {
       theme: "colored",
       toastId: "updated",
     });
-    setProduct(null);
+    setModalType("");
+    setProduct({});
   }
 
   return (

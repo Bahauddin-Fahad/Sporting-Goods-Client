@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
 import ProductCard from "../../components/product/ProductCard";
 import { useGetProductsQuery } from "../../redux/features/product/productApi";
 import { TCategory, TProduct } from "../../types";
@@ -112,9 +112,10 @@ const AllProducts = () => {
     await refetch();
   };
 
-  useEffect(() => {
-    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
-  }, [products]);
+  // useEffect(() => {
+  //   window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+  // }, [products]);
+
   if (isLoading) {
     return <Loading />;
   }
