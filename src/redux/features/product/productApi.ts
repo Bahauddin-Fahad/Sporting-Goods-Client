@@ -7,8 +7,15 @@ const productApi = baseApi.injectEndpoints({
     getProducts: builder.query({
       query: (queryObj) => {
         const params = new URLSearchParams();
-        const { searchTerm, sort, categories, priceRange, category } =
-          queryObj || {};
+        const {
+          searchTerm,
+          sort,
+          categories,
+          priceRange,
+          category,
+          page,
+          limit,
+        } = queryObj || {};
         if (category) {
           params.append("category", category);
         }
@@ -36,10 +43,16 @@ const productApi = baseApi.injectEndpoints({
             params.append("maxPrice", maxPrice);
           }
         }
-
         if (sort) {
           const sortValue = sort === "descending" ? "-price" : "price";
           params.append("sort", sortValue);
+        }
+
+        if (page) {
+          params.append("page", page);
+        }
+        if (limit) {
+          params.append("limit", limit);
         }
 
         return { url: "/products", method: "GET", params };

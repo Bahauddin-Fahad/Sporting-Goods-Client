@@ -34,3 +34,17 @@ input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
+
+.slick-dots button:before {
+  color: White !important;
+}
+
+/* .slick-slide > div {
+height: auto !important;
+} */
+.slick-slide > div > div {
+  outline: none !important;
+}
+.slick-dots li button:before {
+  font-size: 10px;
+}

@@ -7,12 +7,29 @@ import DeleteModal from "../../components/product/DeleteModal";
 import RatingInput from "../../components/product/RatingInput";
 import Loading from "../Loading/Loading";
 
+type TProductState = TProduct | object | null;
 const ManageProducts = () => {
-  const [product, setProduct] = useState({} || null);
-  const [deleteProduct, setDeleteProduct] = useState({} || null);
+  const [product, setProduct] = useState<TProductState>({});
+  const [deleteProduct, setDeleteProduct] = useState<TProductState>(null);
+  const [modalType, setModalType] = useState<string>("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const dataPerPage = 10;
 
-  const { data, isLoading } = useGetProductsQuery({});
+  const queryObj = {
+    page: currentPage,
+    limit: dataPerPage,
+  };
+
+  const { data, isLoading, refetch } = useGetProductsQuery(queryObj);
   const products: TProduct[] = data?.data;
+  const meta = data?.meta;
+  const totalPagesArray = [...Array(meta?.totalPage).keys()];
+
+  const handleCurrentPage = async (page: number) => {
+    await setCurrentPage(page + 1);
+
+    await refetch();
+  };
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
@@ -40,6 +57,7 @@ const ManageProducts = () => {
         <label
           htmlFor="product-modal"
           onClick={() => {
+            setModalType("add");
             setProduct({});
           }}
           className="btn btn-accent font-bold"
@@ -66,8 +84,7 @@ const ManageProducts = () => {
             {products &&
               products?.map((product, index) => (
                 <tr key={index} className="rounded-lg">
-                  <th>{index + 1}</th>
-                  {/* <th>{index + 1 + (currentPage - 1) * dataPerPage}</th> */}
+                  <th>{index + 1 + (currentPage - 1) * dataPerPage}</th>
                   <td>
                     <div className="w-20 p-2 rounded-md glass bg-black cursor-pointer">
                       <PhotoProvider>
@@ -92,6 +109,7 @@ const ManageProducts = () => {
                     <div className="flex gap-2 items-center">
                       <label
                         onClick={() => {
+                          setModalType("edit");
                           setProduct(product);
                         }}
                         htmlFor="product-modal"
@@ -116,22 +134,30 @@ const ManageProducts = () => {
           </tbody>
         </table>
       </div>
-      <div className="space-x-3 mt-4">
-        {/* {totalPagesArray?.length > 1 &&
-      totalPagesArray.map((page, index) => (
-        <button
-          key={index}
-          onClick={() => handleCurrentPage(page)}
-          className={`btn btn-sm ${
-            page + 1 === currentPage && "btn-primary"
-          }`}
-        >
-          {page + 1}
-        </button>
-      ))} */}
+      <div className="space-x-3 mt-4 flex justify-center">
+        {totalPagesArray?.length > 1 &&
+          totalPagesArray.map((page, index) => (
+            <button
+              key={index}
+              onClick={() => handleCurrentPage(page)}
+              className={`btn btn-md font-bold text-lg ${
+                page + 1 === currentPage && "btn-accent"
+              }`}
+            >
+              {page + 1}
+            </button>
+          ))}
       </div>
-
-      {product && <ProductModal product={product} setProduct={setProduct} />}
+      {(modalType === "add" ||
+        (modalType === "edit" &&
+          product &&
+          Object.keys(product)?.length > 0)) && (
+        <ProductModal
+          product={product}
+          setProduct={setProduct}
+          setModalType={setModalType}
+        />
+      )}
 
       {deleteProduct && (
         <DeleteModal

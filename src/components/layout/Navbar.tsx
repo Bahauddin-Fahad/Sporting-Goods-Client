@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { GiHamburgerMenu } from "react-icons/gi";
 type TButtonName =
@@ -10,8 +10,11 @@ type TButtonName =
 
 const Navbar = () => {
   const params = useLocation().pathname;
-
   const [buttonName, setButtonName] = useState<TButtonName>(params.slice(1));
+
+  useEffect(() => {
+    setButtonName(params.slice(1));
+  }, [params]);
 
   return (
     <div className="navbar bg-secondary  font-semibold h-24 shadow-lg shadow-black sticky top-0 z-20">

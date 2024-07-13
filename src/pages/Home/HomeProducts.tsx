@@ -16,8 +16,10 @@ const HomeProducts = () => {
   return (
     <div className="flex flex-col space-y-5 lg:space-y-10">
       <div className="flex gap-2 text-3xl lg:text-5xl text-white">
-        <AiFillProduct className="text-accent" />
-        <h1 className="font-semibold">Our Products</h1>
+        <AiFillProduct data-aos="slide-right" className="text-accent" />
+        <h1 data-aos="slide-left" className="font-semibold">
+          Our Products
+        </h1>
       </div>
       <div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-10">
         {products?.slice(0, 6)?.map((product: TProduct, index: number) => (
@@ -27,7 +29,7 @@ const HomeProducts = () => {
         ))}
       </div>
       <button
-        className="btn btn-white w-48 mx-auto"
+        className="btn btn-white font-bold w-48 mx-auto"
         onClick={() => navigate("/all-products")}
       >
         See All

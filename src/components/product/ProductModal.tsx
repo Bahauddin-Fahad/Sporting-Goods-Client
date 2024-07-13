@@ -2,7 +2,6 @@
 
 import { Controller, FieldError, useForm } from "react-hook-form";
 import { TCategory, TProduct } from "../../types";
-
 import {
   useAddProductMutation,
   useUpdateProductMutation,
@@ -11,7 +10,7 @@ import RatingInput from "./RatingInput";
 import { toast } from "react-toastify";
 import categoryJson from "../../assets/jsons/categories.json";
 
-const ProductModal = ({ product, setProduct }: any) => {
+const ProductModal = ({ product, setProduct, setModalType }: any) => {
   const [addProduct, { data: addedData }] = useAddProductMutation();
   const [updateProduct, { data: updatedData }] = useUpdateProductMutation();
 
@@ -20,7 +19,18 @@ const ProductModal = ({ product, setProduct }: any) => {
     register,
     formState: { errors },
     handleSubmit,
-  } = useForm();
+  } = useForm({
+    defaultValues: {
+      name: product?.name,
+      description: product?.description,
+      price: Number(product?.price),
+      image: product?.image,
+      brand: product?.brand,
+      category: product?.category,
+      stockQuantity: Number(product?.stockQuantity),
+      rating: product?.rating,
+    },
+  });
 
   const onSubmit = async (data: any) => {
     const details = {
@@ -54,6 +64,8 @@ const ProductModal = ({ product, setProduct }: any) => {
       id: product?._id,
       data: details,
     };
+    console.log(details);
+
     updateProduct(options);
   };
   if (updatedData?.status === 200) {
@@ -296,7 +308,10 @@ const ProductModal = ({ product, setProduct }: any) => {
               className="btn btn-md btn-accent w-full font-bold col-span-6"
             />
             <label
-              onClick={() => setProduct(null)}
+              onClick={() => {
+                setModalType("");
+                setProduct({});
+              }}
               htmlFor="product-modal"
               className="btn btn-md w-full font-bold col-span-6"
             >

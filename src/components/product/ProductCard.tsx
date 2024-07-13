@@ -9,7 +9,10 @@ type Props = {
 const ProductCard = ({ product }: Props) => {
   const navigate = useNavigate();
   return (
-    <div className="card bg-secondary shadow-md border border-black shadow-black text-white rounded-2xl h-full">
+    <div
+      data-aos="zoom-in"
+      className="card bg-secondary shadow-md border border-black shadow-black text-white rounded-2xl h-full"
+    >
       <figure className="glass rounded-lg p-5 mb-3 m-7">
         <PhotoProvider>
           <PhotoView src={product.image}>

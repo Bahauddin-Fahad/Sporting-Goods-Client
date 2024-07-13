@@ -10,8 +10,10 @@ const Categories = () => {
   return (
     <div className="flex flex-col space-y-5 lg:space-y-10">
       <div className="flex gap-2 text-3xl lg:text-5xl text-white">
-        <BiSolidCategory className="text-accent" />
-        <h1 className="font-semibold">Categories</h1>
+        <BiSolidCategory data-aos="slide-right" className="text-accent" />
+        <h1 data-aos="slide-left" className="font-semibold">
+          Categories
+        </h1>
       </div>
       <div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
         {categoryJson?.map((category: TCategory, index: number) => (
@@ -23,6 +25,7 @@ const Categories = () => {
             <img
               src={category.image}
               alt=""
+              data-aos="zoom-in"
               className="h-[120px] w-[120px] hover:scale-110 duration-300"
             />
             <p className="text-2xl font-semibold">{category?.name}</p>
