@@ -51,13 +51,13 @@ const Cart = () => {
     products: stateProducts,
     quantities,
     subtotal,
-  } = useAppSelector((state) => state.products);
+  } = useAppSelector((state) => state?.products);
 
   useEffect(() => {
     if (!isLoading) {
-      const stateProductIds = stateProducts.map((product) => product.id);
-      const filtered = allProducts.filter((product: TProduct) =>
-        stateProductIds.includes(product?._id)
+      const stateProductIds = stateProducts?.map((product) => product.id);
+      const filtered = allProducts?.filter((product: TProduct) =>
+        stateProductIds?.includes(product?._id)
       );
       setFilteredProducts(filtered);
     }
@@ -92,15 +92,15 @@ const Cart = () => {
       for (const stateProduct of stateProducts) {
         const { id } = stateProduct;
         const quantity = quantities[id] || 0;
-        const filteredProduct = filteredProducts.find(
-          (product) => product._id === id
+        const filteredProduct = filteredProducts?.find(
+          (product) => product?._id === id
         );
 
         if (filteredProduct) {
           const { stockQuantity, ...restData } = filteredProduct;
           const updatedProduct = {
             ...restData,
-            stockQuantity: filteredProduct.stockQuantity - quantity,
+            stockQuantity: filteredProduct?.stockQuantity - quantity,
           };
 
           const options = {
@@ -108,14 +108,14 @@ const Cart = () => {
             data: updatedProduct,
           };
 
-          await updateProduct(options).unwrap();
+          await updateProduct(options)?.unwrap();
 
           // adding product ID to orderData's products array
-          orderData.products.push(id);
+          orderData?.products?.push(id);
         }
       }
 
-      await addOrder(orderData).unwrap();
+      await addOrder(orderData)?.unwrap();
       dispatch(clearCart());
       reset();
       navigate(-1);
@@ -134,7 +134,7 @@ const Cart = () => {
       if (isDirty) {
         const message =
           "You have unsaved changes. Are you sure you want to leave?";
-        event.returnValue = message; // Legacy way for most browsers
+        event?.returnValue = message; // Legacy way for most browsers
         return message; // For some browsers
       }
     };
@@ -425,7 +425,7 @@ const Cart = () => {
                     <div className="flex items-center justify-between">
                       <dt className="text-sm">Subtotal</dt>
                       <dd className="text-sm font-medium text-accent">
-                        ${subtotal.toFixed(2)}
+                        ${subtotal?.toFixed(2)}
                       </dd>
                     </div>
                     <div className="flex items-center justify-between">
@@ -437,13 +437,13 @@ const Cart = () => {
                     <div className="flex items-center justify-between">
                       <dt className="text-sm">Taxes</dt>
                       <dd className="text-sm font-medium text-accent">
-                        ${taxes.toFixed(2)}
+                        ${taxes?.toFixed(2)}
                       </dd>
                     </div>
                     <div className="flex items-center justify-between border-t border-gray-200 pt-6">
                       <dt className="text-base font-medium">Total</dt>
                       <dd className="text-base font-medium text-accent">
-                        ${total.toFixed(2)}
+                        ${total?.toFixed(2)}
                       </dd>
                     </div>
                   </div>
