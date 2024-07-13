@@ -20,9 +20,10 @@ import { TProduct } from "../../types";
 import { useNavigate } from "react-router-dom";
 const Cart = () => {
   const navigate = useNavigate();
+
   // useEffect(() => {
   //   window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
-  // });
+  // }, []);
 
   const {
     handleSubmit,
@@ -86,7 +87,6 @@ const Cart = () => {
         delivery: "Cash",
         products: [] as string[],
       };
-      console.log(orderData);
 
       // Update quantities in the filtered products
       for (const stateProduct of stateProducts) {
@@ -122,7 +122,6 @@ const Cart = () => {
       toast.success("Order placed successfully!", { theme: "colored" });
     } catch (error) {
       console.log(error);
-
       toast.error("Failed to place order. Please try again.", {
         theme: "colored",
       });

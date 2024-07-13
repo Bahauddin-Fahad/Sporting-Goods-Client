@@ -64,7 +64,6 @@ const ProductModal = ({ product, setProduct, setModalType }: any) => {
       id: product?._id,
       data: details,
     };
-    console.log(details);
 
     updateProduct(options);
   };

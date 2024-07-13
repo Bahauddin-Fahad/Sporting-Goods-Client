@@ -11,9 +11,9 @@ import { addProduct } from "../../redux/features/product/productSlice";
 import QuantitySelector from "../../components/ui/QuantitySelector";
 
 const ProductDetails = () => {
-  // useEffect(() => {
-  //   window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
-  // });
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+  }, []);
 
   const { id } = useParams();
   const { data } = useGetSingleProuctQuery(id);
